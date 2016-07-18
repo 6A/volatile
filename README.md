@@ -27,6 +27,7 @@ Available commands:
 # Notes
 - A website can be optionally passed with `export`.
 - The password will be set when you use volatile for the first time.
+- A limited number of data can be saved. However, you shouldn't worry about that. Considering that a single account takes between 20 and 200 bytes, the 2,70MB Volatile.exe file can save from 14,000 to 140,000 different accounts.
 
 # How does it work?
 1. When Volatile is started, it loads two of its embedded resources: a Base64 compiled version of VolatileExe, and a Base64 string of data.
