@@ -5,7 +5,7 @@
 
     ----
 
-    Copyright (c) 2016 idotjee
+    Copyright (c) 2016 Jee
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,8 @@ namespace Volatile
     using System.Security.Cryptography;
     using System.Text;
     using System.Diagnostics;
-    
+    using System.Security;
+
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public sealed class VolatileObjectAttribute : Attribute
     {
@@ -70,6 +71,11 @@ namespace Volatile
         private ConstructorInfo ctor;
         private VolatileObjectAttribute attr;
         private List<Tuple<Type, VolatileObjectMemberAttribute, MemberInfo>> members;
+
+        public int Count
+        {
+            get { return objects.Count; }
+        }
 
         public VolatileContext(string key)
         {

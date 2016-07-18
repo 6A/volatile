@@ -18,10 +18,8 @@ namespace VolatileExe
     using System.Collections.Generic;
     using System.IO;
     using System.IO.Pipes;
-    using System.Reflection;
     using System.Text;
     using System.Threading;
-    using System.Runtime.InteropServices;
 
     static class Program
     {

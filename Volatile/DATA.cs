@@ -2,7 +2,7 @@
 {
     using System.IO;
     using System.Reflection;
-    using System.Text;
+
     static class DATA
     {
         public static UnmanagedMemoryStream Base64Exe

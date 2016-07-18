@@ -31,5 +31,28 @@ namespace Volatile
             Website = website;
             Hint = hint;
         }
+
+        public Account()
+        {
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            if (!String.IsNullOrWhiteSpace(Username))
+                sb.AppendLine($"  Username: {Username}");
+
+            if (!String.IsNullOrWhiteSpace(Password))
+                sb.AppendLine($"  Password: {Password}");
+
+            if (!String.IsNullOrWhiteSpace(Email))
+                sb.AppendLine($"  Email address: {Email}");
+
+            if (!String.IsNullOrWhiteSpace(Hint))
+                sb.AppendLine($"  Hint: {Hint}");
+
+            return sb.Length == 0 ? "  [empty]\n" : sb.ToString();
+        }
     }
 }
