@@ -1,17 +1,4 @@
-﻿/*
-
-GETTING EXE'S BASE64 STRING:
-
-script.csx:
-    using System;
-    using System.IO;
-
-    const string file = "VolatileExe";
-    File.WriteAllText(file + ".txt", Convert.ToBase64String(File.ReadAllBytes(file + ".exe")));
-
-*/
-
-namespace VolatileExe
+﻿namespace VolatileExe
 {
     using System;
     using System.Linq;
@@ -94,7 +81,7 @@ namespace VolatileExe
                 catch (Exception)
                 {
                     tries++;
-                    Thread.Sleep(100);
+                    Thread.Sleep(50 * tries);
                 }
             }
         }
