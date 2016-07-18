@@ -77,20 +77,15 @@
 
             if (TryUnlock(pass)) // right password?
             {
-                if (argv.Export) // if export
-                {
-                    if (argv.Website != null)
-                        Console.WriteLine(ToJSON(Accounts.FirstOrDefault(x => Same(argv.Website, x.Website)) ?? new Account()));
-                    else
-                        Console.WriteLine(ToJSON());
-                }
-                else if (argv.Website != null) // if args given...
+                Console.Clear();
+                
+                if (argv.Website != null) // if args given...
                 {
                     if (argv.Remove) // remove website
                     {
                         React($"remove {argv.Website}".Split(' '));
                     }
-                    else if (argv.Username != null || argv.Email != null || argv.Password != null || argv.Hint != null) // multiple args ; add / update a website
+                    else if (argv.Username != null && argv.Email != null) // multiple args ; add / update a website
                     {
                         StringBuilder sb = new StringBuilder($"set {argv.Website}");
 
@@ -99,7 +94,7 @@
                         if (argv.Hint != null) sb.Append($" -h {argv.Hint}");
                         if (argv.Password != null) sb.Append($" -p {argv.Password}");
 
-                        React(FluentParser<object>.Split(sb.ToString()));
+                        React(sb.ToString().Split(' '));
                     }
                     else // only the website is given ; return the website
                     {
@@ -108,45 +103,35 @@
                 }
                 else // interactive
                 {
-                    Console.Clear();
-                    ShowHelp();
+                    Console.WriteLine("Welcome.");
+                    Console.WriteLine();
+                    Console.WriteLine("get [site]");
+                    Console.WriteLine();
+                    Console.WriteLine("set [site]");
+                    Console.WriteLine("    -p, --pass, --password [password]");
+                    Console.WriteLine("    -u, --user, --username [username]");
+                    Console.WriteLine("    -e, --mail, --email [email]");
+                    Console.WriteLine("    -h, --hint [hint]");
+                    Console.WriteLine();
+                    Console.WriteLine("remove [site]");
+                    Console.WriteLine();
+                    Console.WriteLine("export [filename]");
+                    Console.WriteLine();
+
                     IsVerbose = true;
 
                     string cmd;
-                    Console.Write('>');
                     while ((cmd = Console.ReadLine().Trim()) != "exit" && cmd != "shutdown" && cmd != "stop" && cmd != "quit")
-                    {
                         React(FluentParser<object>.Split(cmd));
-                        Console.Write('>');
-                    }
-                }
+                }               
 
                 Accounts.Dispose();
             }
             else
             {
                 Console.WriteLine("Invalid password, please try again.");
+                Console.ReadKey();
             }
-        }
-
-        static void ShowHelp()
-        {
-            Console.WriteLine("get [site]");
-            Console.WriteLine();
-            Console.WriteLine("set [site]");
-            Console.WriteLine("    -p, --pass, --password [password]");
-            Console.WriteLine("    -u, --user, --username [username]");
-            Console.WriteLine("    -e, --mail, --email [email]");
-            Console.WriteLine("    -h, --hint [hint]");
-            Console.WriteLine();
-            Console.WriteLine("remove [site]");
-            Console.WriteLine();
-            Console.WriteLine("export [filename]");
-            Console.WriteLine();
-            Console.WriteLine("list");
-            Console.WriteLine();
-            Console.WriteLine("clear");
-            Console.WriteLine();
         }
 
         static bool TryUnlock(string password)
@@ -177,23 +162,6 @@
                 return;
 
             string cmd = input[0];
-
-            if (Same(cmd, "clear"))
-            {
-                Console.Clear();
-                ShowHelp();
-                return;
-            }
-
-            if (Same(cmd, "list"))
-            {
-                foreach (Account a in Accounts)
-                {
-                    Console.WriteLine(a.Website);
-                    Console.WriteLine(a.ToString());
-                }
-                return;
-            }
 
             if (Same(cmd, "export"))
             {
@@ -298,21 +266,17 @@
             int i = 0;
             foreach (Account a in Accounts)
             {
-                sb.AppendFormat("  \"{0}\": {1}{2}\n", a.Website, ToJSON(a), i++ < Accounts.Count - 1 ? "," : String.Empty);
+                sb.AppendFormat("  \"{0}\": {{\"username\": {1}, \"password\": {2}, \"email\": {3}, \"hint\": {4}}}{5}\n",
+                    a.Website,
+                    a.Username == null ? $"\"{a.Username}\"" : "null",
+                    a.Password == null ? $"\"{a.Password}\"" : "null",
+                    a.Email == null ? $"\"{a.Email}\"" : "null",
+                    a.Hint == null ? $"\"{a.Hint}\"" : "null",
+                    i < Accounts.Count - 1 ? "," : String.Empty);
             }
 
             sb.Append('}');
             return sb.ToString();
-        }
-
-        static string ToJSON(Account a)
-        {
-            return string.Format("{{\"username\": {1}, \"password\": {2}, \"email\": {3}, \"hint\": {4}}}",
-                    a.Website,
-                    a.Username != null ? $"\"{a.Username}\"" : "null",
-                    a.Password != null ? $"\"{a.Password}\"" : "null",
-                    a.Email != null ? $"\"{a.Email}\"" : "null",
-                    a.Hint != null ? $"\"{a.Hint}\"" : "null");
         }
     }
 }
